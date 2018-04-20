@@ -195,16 +195,16 @@ vocab_to_int = {c:i for i, c in enumerate(vocab)}
 int_to_vocab = dict(enumerate(vocab))
 encoded = np.array([vocab_to_int[c] for c in text])
 
-batch_size = 10        # Sequences per batch
-num_steps = 50         # Number of sequence steps per batch
+batch_size = 100        # Sequences per batch
+num_steps = 100         # Number of sequence steps per batch
 lstm_size = 512         # Size of hidden layers in LSTMs
 num_layers = 2          # Number of LSTM layers
 learning_rate = 0.001   # Learning rate
 keep_prob = 0.5         # Dropout keep probability
 
-epochs = 1
+epochs = 20
 # Print losses every N interations
-print_every_n = 5
+print_every_n = 2
 
 # Save every N iterations
 save_every_n = 200
