@@ -1,99 +1,30 @@
 "# machine-learning" 
 
-bootstrap
-
-sudo yum update -y
-mkdir -p python/installables
-cd python/installables
-wget https://repo.continuum.io/archive/Anaconda3-5.1.0-Linux-x86_64.sh
-bash Anaconda3-5.1.0-Linux-x86_64.sh
-source .bashrc
+---------------------------------------------------
+Tensorflow build + installation with GPU support
+---------------------------------------------------
 
 
-https://hackernoon.com/aws-ec2-part-4-starting-a-jupyter-ipython-notebook-server-on-aws-549d87a55ba9
-nohup python -u .py > cmd.log &
-
-Tensorflow performance improvement tips :-
-https://stackoverflow.com/questions/41293077/how-to-compile-tensorflow-with-sse4-2-and-avx-instructions
-https://github.com/lakshayg/tensorflow-build
-
-
---------------------------------------------------------------------------
-Ubuntu
---------------------------------------------------------------------------
 sudo apt-get update -y
 
-mkdir -p installables
-cd installables
+----------------------------------------------------
+NVIDIA CUDA Installation
+----------------------------------------------------
 
-------------------
-Install Bazel
-
-sudo apt-get install pkg-config zip g++ zlib1g-dev unzip python -y
-wget https://github.com/bazelbuild/bazel/releases/download/0.12.0/bazel-0.12.0-installer-linux-x86_64.sh
-chmod +x bazel-0.12.0-installer-linux-x86_64.sh
-bash bazel-0.12.0-installer-linux-x86_64.sh --user
-cd ../
-vi .bashrc
-ADD export PATH="$PATH:$HOME/bin"
-source .bashrc
-
---------------------
-Install Conda
-
-cd installables
-wget https://repo.continuum.io/archive/Anaconda3-5.1.0-Linux-x86_64.sh
-bash Anaconda3-5.1.0-Linux-x86_64.sh
-cd ../
-source .bashrc
-
----------------------
-Build & Install CPU optimized Tensorflow
-
-cd installables
-git clone https://github.com/tensorflow/tensorflow
-cd tensorflow
-sudo apt-get install python3-numpy python3-dev python3-pip python3-wheel -y
-conda -V
-conda update conda
-conda search "^python$"
-conda create -n tensorflow_optimized python=3.6.5 anaconda
-source activate tensorflow_optimized
-pip install --upgrade pip
-pip install six numpy wheel packaging appdirs
-bazel build -c opt --verbose_failures --copt=-mavx --copt=-msse4.1 --copt=-msse4.2  -k //tensorflow/tools/pip_package:build_pip_package
-
-
-
------------------------------------------------------------------------
-git clone https://github.com/samriddhac/machine-learning.git
-conda install numpy pandas matplotlib keras
-source deactivate
-
-------------------
-
-
-Tensorflow installation with GPU support
-
- 
-sudo apt-get update -y
-
-mkdir -p installables
-cd installables
-sudo vi /etc/modprobe.d/nouveau
-/**Content**/
-blacklist nouveau
-options nouveau modeset=0
-sudo reboot
-cd installables
-sudo apt install awscli
 sudo apt-get install openjdk-8-jdk git python-dev python3-dev python-numpy python3-numpy build-essential python-pip python3-pip python-virtualenv swig python-wheel libcurl3-dev curl -y
+
 curl -O https://s3-us-west-2.amazonaws.com/sam-tensorflow-installers/cuda-repo-ubuntu1604_9.0.176-1_amd64.deb
+
 sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
+
 sudo dpkg -i ./cuda-repo-ubuntu1604_9.0.176-1_amd64.deb
+
 sudo apt-get update -y
+
 sudo apt-get install cuda-9-0 -y
+
 nvidia-smi
+
 
 Thu May 24 10:13:00 2018
 +-----------------------------------------------------------------------------+
@@ -114,10 +45,15 @@ Thu May 24 10:13:00 2018
 +-----------------------------------------------------------------------------+
 
 wget https://s3-us-west-2.amazonaws.com/sam-tensorflow-installers/cudnn-9.0-linux-x64-v7.1.tgz
+
 sudo tar -xzvf cudnn-9.0-linux-x64-v7.1.tgz
+
 sudo cp cuda/include/cudnn.h /usr/local/cuda/include
+
 sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64
+
 sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
+
 
 .bashrc
 
@@ -126,30 +62,50 @@ export CUDA_HOME=/usr/local/cuda
 
 source ~/.bashrc
 
+--------------------------------------
+Bazel Installation
+--------------------------------------
 
 sudo apt-get install pkg-config zip g++ zlib1g-dev unzip python -y
+
 wget https://github.com/bazelbuild/bazel/releases/download/0.12.0/bazel-0.12.0-installer-linux-x86_64.sh
+
 chmod +x bazel-0.12.0-installer-linux-x86_64.sh
+
 bash bazel-0.12.0-installer-linux-x86_64.sh --user
-cd ../
+
 vi .bashrc
+
 ADD export PATH="$PATH:$HOME/bin"
+
 source .bashrc
 
-cd installables
+---------------------------------------------
+Python Anaconda Distribution Installation
+---------------------------------------------
+
 wget https://repo.continuum.io/archive/Anaconda3-5.1.0-Linux-x86_64.sh
+
 bash Anaconda3-5.1.0-Linux-x86_64.sh
-cd ../
+
 source .bashrc
-cd installables
+
 conda create -n tensorflow_optimized python=3.6.5 anaconda
+
 source activate tensorflow_optimized
+
 pip install --upgrade pip
 
+
+-----------------------------------------------
+Tensorflow build & Installation
+-----------------------------------------------
 sudo apt-get install python3-numpy python3-dev python3-pip python3-wheel -y
-cd installables
+
 git clone https://github.com/tensorflow/tensorflow
+
 cd tensorflow/
+
 ./configure
 
 output :-
@@ -235,8 +191,12 @@ Preconfigured Bazel build configs. You can use any of the below by adding "--con
         --config=monolithic     # Config for mostly static monolithic build.
 Configuration finished
 
+
 bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+
+
 bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+
 pip install /tmp/tensorflow_pkg/tensorflow-1.8.0-cp36-cp36m-linux_x86_64.whl
 
 
@@ -268,8 +228,6 @@ locality {
 incarnation: 7690126783017632181
 physical_device_desc: "device: 0, name: GRID K520, pci bus id: 0000:00:03.0, compute capability: 3.0"
 ]
-
-
 
 
 
